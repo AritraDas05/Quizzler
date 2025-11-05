@@ -1,6 +1,7 @@
-A Problem abstract class to extract the questions from some external api
+A ProblemBank abstract class to extract the questions from some external api
 
 It should take input as the number of questions to fetch and the difficulty level
+Also we can have different categories like General Knowledge, Science, History, etc. (this can be another input parameter)
 
 The number of questions can be between 1 to 50
 
@@ -11,8 +12,6 @@ If custom is chosen then the questions get harder based on the users performance
 (We can set some performance criteria here, initially we can do like 50% easy, 30% medium and 20% hard)
 
 The type of questions can be multiple choice or true/false or a mix of both (this can be another input parameter)
-
-Also we can have different categories like General Knowledge, Science, History, etc. (this can be another input parameter)
 
 Also fill in the blanks and numerical can be added
 
