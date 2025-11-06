@@ -3,7 +3,6 @@ from interfaces import IDifficultyStrategy, IScoringStrategy
 
 
 class AdaptiveDifficultyStrategy(IDifficultyStrategy):
-    """Adaptive difficulty based on player performance (Strategy Pattern)"""
 
     def __init__(self):
         self._current_difficulty = "easy"
@@ -16,11 +15,9 @@ class AdaptiveDifficultyStrategy(IDifficultyStrategy):
 
         current_index = self._difficulty_levels.index(self._current_difficulty)
 
-        # Increase difficulty
         if streak >= 3 and accuracy >= 0.7 and current_index < 2:
             self._current_difficulty = self._difficulty_levels[current_index + 1]
 
-        # Decrease difficulty
         elif total >= 5 and accuracy < 0.4 and current_index > 0:
             self._current_difficulty = self._difficulty_levels[current_index - 1]
 
@@ -31,7 +28,6 @@ class AdaptiveDifficultyStrategy(IDifficultyStrategy):
 
 
 class StaticDifficultyStrategy(IDifficultyStrategy):
-    """Fixed difficulty - doesn't change (Strategy Pattern)"""
 
     def __init__(self, difficulty: str = "medium"):
         self._difficulty = difficulty
@@ -44,14 +40,12 @@ class StaticDifficultyStrategy(IDifficultyStrategy):
 
 
 class BasicScoringStrategy(IScoringStrategy):
-    """Basic scoring - 1 point per correct answer"""
 
     def calculate_score(self, is_correct: bool, time_taken: int, difficulty: str) -> int:
         return 1 if is_correct else 0
 
 
 class TimeBonusScoringStrategy(IScoringStrategy):
-    """Time-based scoring with difficulty multiplier"""
 
     def __init__(self):
         self._difficulty_multiplier = {
@@ -66,10 +60,9 @@ class TimeBonusScoringStrategy(IScoringStrategy):
 
         base_score = self._difficulty_multiplier.get(difficulty, 1)
 
-        # Bonus for fast answers (30s max)
-        if time_taken <= 10:
+        if time_taken <= 3:
             return base_score * 3
-        elif time_taken <= 20:
+        elif time_taken <= 6:
             return base_score * 2
         else:
             return base_score

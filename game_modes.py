@@ -4,7 +4,6 @@ from models import Player
 
 
 class SinglePlayerMode(IGameMode):
-    """Single player game mode (Liskov Substitution Principle)"""
 
     def __init__(self, difficulty_strategy: IDifficultyStrategy,
                  scoring_strategy: IScoringStrategy):
@@ -37,7 +36,6 @@ class SinglePlayerMode(IGameMode):
         }
 
     def process_answer(self, is_correct: bool, time_taken: int) -> int:
-        """Process answer and return points earned"""
         self._player.record_answer(is_correct)
 
         difficulty = self._difficulty_strategy.get_current_difficulty()
@@ -54,7 +52,6 @@ class SinglePlayerMode(IGameMode):
 
 
 class MultiPlayerMode(IGameMode):
-    """Multiplayer game mode (Liskov Substitution Principle)"""
 
     def __init__(self, num_players: int, difficulty_strategy: IDifficultyStrategy,
                  scoring_strategy: IScoringStrategy):
@@ -73,7 +70,6 @@ class MultiPlayerMode(IGameMode):
             self._players[player_id]._name = name
 
     def next_turn(self) -> bool:
-        """Switch to next player"""
         self._current_player_index = (self._current_player_index + 1) % self._num_players
         return True
 
@@ -97,7 +93,6 @@ class MultiPlayerMode(IGameMode):
         }
 
     def process_answer(self, is_correct: bool, time_taken: int) -> int:
-        """Process answer for current player"""
         current_player = self.get_current_player()
         current_player.record_answer(is_correct)
 

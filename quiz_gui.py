@@ -34,13 +34,13 @@ class QuizGUI:
 
     def __init__(self, root: tk.Tk):
         self.root = root
-        self.root.title("Adaptive Quiz Application - OOP Design")
+        self.root.title("Quizzler App")
         self.root.geometry("800x600")
         self.root.resizable(False, False)
 
         self.controller: Optional[GameController] = None
         self.selected_answer = tk.StringVar()
-        self.timer_seconds = 30
+        self.timer_seconds = 10
         self.timer_id: Optional[str] = None
         self.start_time = 0
 
@@ -69,7 +69,7 @@ class QuizGUI:
         header_frame.pack(fill='x')
         header_frame.pack_propagate(False)
 
-        ttk.Label(header_frame, text="🎯 SOLID Quiz Master",
+        ttk.Label(header_frame, text="🎯 Quizzler App",
                   style='Title.TLabel').pack(pady=20)
 
         menu_frame = tk.Frame(self.root, bg='white')
@@ -96,21 +96,16 @@ class QuizGUI:
                   command=self.root.quit).pack(pady=10)
 
     def _start_single_player(self) -> None:
-        """Create single player game using dependency injection"""
         try:
-            # Create dependencies
-            parameters = {'amount': 20, 'type': 'multiple', 'difficulty': 'easy'}
+            parameters = {'amount': 5, 'type': 'multiple', 'difficulty': 'easy'}
             problem_bank = OpenTBProblemBank(parameters)
             question_manager = QuestionManager(problem_bank)
 
-            # Create strategies
             difficulty_strategy = AdaptiveDifficultyStrategy()
             scoring_strategy = TimeBonusScoringStrategy()
 
-            # Create game mode
             game_mode = SinglePlayerMode(difficulty_strategy, scoring_strategy)
 
-            # Inject dependencies into controller
             self.controller = GameController(game_mode, question_manager)
             self.controller.start_game()
 
@@ -267,7 +262,7 @@ class QuizGUI:
                   bg='#27AE60', fg='white', width=20, height=2,
                   command=self._submit_answer).pack(pady=20)
 
-        self.timer_seconds = 30
+        self.timer_seconds = 10
         self._update_timer()
 
     def _update_timer(self) -> None:
@@ -280,7 +275,7 @@ class QuizGUI:
 
     def _time_up(self) -> None:
         messagebox.showwarning("Time's Up!", "You ran out of time!")
-        self.controller.submit_answer("", 30)
+        self.controller.submit_answer("", 10)
         self._next_question_or_end()
 
     def _submit_answer(self) -> None:
