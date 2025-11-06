@@ -26,6 +26,7 @@ class SinglePlayerMode(IGameMode):
     def is_game_over(self) -> bool:
         return self._player.get_score() >= self._target_score
 
+
     def get_current_player(self) -> IPlayer:
         return self._player
 

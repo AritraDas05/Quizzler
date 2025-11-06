@@ -57,6 +57,41 @@ class QuizGUI:
                         background='#2C3E50', foreground='white')
         style.configure('Question.TLabel', font=('Helvetica', 14, 'bold'),
                         wraplength=700, justify='left')
+        
+    def _get_categories(self):
+    # You can also fetch dynamically from OpenTDB:
+    # resp = requests.get("https://opentdb.com/api_category.php").json()
+    # categories = {c['id']: c['name'] for c in resp['trivia_categories']}
+
+    # Hardcoded fallback list for simplicity:
+        categories = {
+            9: "General Knowledge",
+            10: "Entertainment: Books",
+            11: "Entertainment: Film",
+            12: "Entertainment: Music",
+            13: "Entertainment: Musicals & Theatres",
+            14: "Entertainment: Television",
+            15: "Entertainment: Video Games",
+            16: "Entertainment: Board Games",
+            17: "Science & Nature",
+            18: "Science: Computers",
+            19: "Science: Mathematics",
+            20: "Mythology",
+            21: "Sports",
+            22: "Geography",
+            23: "History",
+            24: "Politics",
+            25: "Art",
+            26: "Celebrities",
+            27: "Animals",
+            28: "Vehicles",
+            29: "Comics",
+            30: "Gadgets",
+            31: "Anime & Manga",
+            32: "Cartoon & Animations"
+        }
+        return categories
+
 
     def _clear_window(self) -> None:
         for widget in self.root.winfo_children():
@@ -95,25 +130,77 @@ class QuizGUI:
                   bg='#95A5A6', fg='white', width=25, height=2,
                   command=self.root.quit).pack(pady=10)
 
+    # def _start_single_player(self) -> None:
+    #     try:
+    #         parameters = {'amount': 6, 'type': 'multiple', 'difficulty': 'easy'}
+    #         problem_bank = OpenTBProblemBank(parameters)
+    #         question_manager = QuestionManager(problem_bank)
+
+    #         difficulty_strategy = AdaptiveDifficultyStrategy()
+    #         scoring_strategy = TimeBonusScoringStrategy()
+
+    #         game_mode = SinglePlayerMode(difficulty_strategy, scoring_strategy)
+
+    #         self.controller = GameController(game_mode, question_manager)
+    #         self.controller.start_game()
+
+    #         self._show_quiz()
+    #     except Exception as e:
+    #         messagebox.showerror("Error", f"Failed to start game: {str(e)}")
+    #         self._show_main_menu()
+
     def _start_single_player(self) -> None:
+
         try:
-            parameters = {'amount': 5, 'type': 'multiple', 'difficulty': 'easy'}
-            problem_bank = OpenTBProblemBank(parameters)
-            question_manager = QuestionManager(problem_bank)
+            # --- Ask for category ---
+            categories = self._get_categories()
 
-            difficulty_strategy = AdaptiveDifficultyStrategy()
-            scoring_strategy = TimeBonusScoringStrategy()
+            cat_window = tk.Toplevel(self.root)
+            cat_window.title("Choose Category")
+            cat_window.geometry("400x200")
 
-            game_mode = SinglePlayerMode(difficulty_strategy, scoring_strategy)
+            tk.Label(cat_window, text="Select a Category:",
+                    font=('Helvetica', 12, 'bold')).pack(pady=10)
 
-            self.controller = GameController(game_mode, question_manager)
-            self.controller.start_game()
+            category_var = tk.IntVar(value=9)
+            combo = ttk.Combobox(cat_window, values=[f"{k} - {v}" for k, v in categories.items()],
+                                state="readonly", font=('Helvetica', 11), width=40)
+            combo.pack(pady=10)
+            combo.current(0)
 
-            self._show_quiz()
+            def start_game():
+                selected_text = combo.get()
+                selected_id = int(selected_text.split(" - ")[0])
+                cat_window.destroy()
+
+                parameters = {
+                    'amount': 10,
+                    'type': 'multiple',
+                    'category': selected_id,
+                    'difficulty': 'easy'
+                }
+
+                problem_bank = OpenTBProblemBank(parameters)
+                question_manager = QuestionManager(problem_bank)
+                difficulty_strategy = AdaptiveDifficultyStrategy()
+                scoring_strategy = TimeBonusScoringStrategy()
+
+                game_mode = SinglePlayerMode(difficulty_strategy, scoring_strategy)
+
+                self.controller = GameController(game_mode, question_manager)
+                self.controller.start_game()
+                self._show_quiz()
+
+            tk.Button(cat_window, text="Start Game",
+                    font=('Helvetica', 11, 'bold'),
+                    bg='#27AE60', fg='white', width=15,
+                    command=start_game).pack(pady=20)
+
         except Exception as e:
             messagebox.showerror("Error", f"Failed to start game: {str(e)}")
             self._show_main_menu()
 
+    
     def _show_multiplayer_setup(self) -> None:
         self._clear_window()
 
@@ -262,7 +349,7 @@ class QuizGUI:
                   bg='#27AE60', fg='white', width=20, height=2,
                   command=self._submit_answer).pack(pady=20)
 
-        self.timer_seconds = 10
+        self.timer_seconds = 20
         self._update_timer()
 
     def _update_timer(self) -> None:
@@ -275,7 +362,7 @@ class QuizGUI:
 
     def _time_up(self) -> None:
         messagebox.showwarning("Time's Up!", "You ran out of time!")
-        self.controller.submit_answer("", 10)
+        self.controller.submit_answer("", 20)
         self._next_question_or_end()
 
     def _submit_answer(self) -> None:
@@ -354,3 +441,5 @@ class QuizGUI:
                   font=('Helvetica', 12), bg='#95A5A6', fg='white',
                   width=15, height=2,
                   command=self._show_main_menu).pack(side='left', padx=10)
+
+
