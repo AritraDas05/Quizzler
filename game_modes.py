@@ -101,7 +101,6 @@ class MultiPlayerMode(IGameMode):
         points = self._scoring_strategy.calculate_score(is_correct, time_taken, difficulty)
         current_player.update_score(points)
 
-        # Adjust difficulty based on current player's performance
         self._difficulty_strategy.adjust_difficulty(current_player.get_statistics())
 
         return points

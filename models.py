@@ -3,7 +3,6 @@ from interfaces import IPlayer
 
 
 class Player(IPlayer):
-    """Player model - handles player data only (Single Responsibility)"""
 
     def __init__(self, name: str, player_id: int):
         self._name = name
@@ -50,7 +49,6 @@ class Player(IPlayer):
 
 
 class Question:
-    """Question model - handles question data only (Single Responsibility)"""
 
     def __init__(self, question_data: Dict[str, Any]):
         self._question = question_data.get('question', '')

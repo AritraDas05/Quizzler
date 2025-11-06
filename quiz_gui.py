@@ -59,11 +59,6 @@ class QuizGUI:
                         wraplength=700, justify='left')
         
     def _get_categories(self):
-    # You can also fetch dynamically from OpenTDB:
-    # resp = requests.get("https://opentdb.com/api_category.php").json()
-    # categories = {c['id']: c['name'] for c in resp['trivia_categories']}
-
-    # Hardcoded fallback list for simplicity:
         categories = {
             9: "General Knowledge",
             10: "Entertainment: Books",
@@ -130,29 +125,9 @@ class QuizGUI:
                   bg='#95A5A6', fg='white', width=25, height=2,
                   command=self.root.quit).pack(pady=10)
 
-    # def _start_single_player(self) -> None:
-    #     try:
-    #         parameters = {'amount': 6, 'type': 'multiple', 'difficulty': 'easy'}
-    #         problem_bank = OpenTBProblemBank(parameters)
-    #         question_manager = QuestionManager(problem_bank)
-
-    #         difficulty_strategy = AdaptiveDifficultyStrategy()
-    #         scoring_strategy = TimeBonusScoringStrategy()
-
-    #         game_mode = SinglePlayerMode(difficulty_strategy, scoring_strategy)
-
-    #         self.controller = GameController(game_mode, question_manager)
-    #         self.controller.start_game()
-
-    #         self._show_quiz()
-    #     except Exception as e:
-    #         messagebox.showerror("Error", f"Failed to start game: {str(e)}")
-    #         self._show_main_menu()
-
     def _start_single_player(self) -> None:
 
         try:
-            # --- Ask for category ---
             categories = self._get_categories()
 
             cat_window = tk.Toplevel(self.root)
@@ -239,7 +214,6 @@ class QuizGUI:
             try:
                 num = num_players_var.get()
 
-                # Create dependencies
                 parameters = {'amount': 10, 'type': 'multiple', 'difficulty': 'easy'}
                 problem_bank = OpenTBProblemBank(parameters)
                 question_manager = QuestionManager(problem_bank)
@@ -248,14 +222,11 @@ class QuizGUI:
                 difficulty_strategy = AdaptiveDifficultyStrategy()
                 scoring_strategy = BasicScoringStrategy()
 
-                # Create game mode with player count
                 game_mode = MultiPlayerMode(num, difficulty_strategy, scoring_strategy)
 
-                # Inject dependencies
                 self.controller = GameController(game_mode, question_manager)
                 self.controller.start_game()
 
-                # Set player names
                 for i in range(num):
                     name = name_entries[i].get().strip()
                     if name:
@@ -284,7 +255,6 @@ class QuizGUI:
         import time
         self.start_time = time.time()
 
-        # Header with scores
         header_frame = tk.Frame(self.root, bg='#2C3E50', height=80)
         header_frame.pack(fill='x')
         header_frame.pack_propagate(False)
@@ -293,22 +263,18 @@ class QuizGUI:
         game_mode = self.controller.get_game_mode()
 
         if hasattr(game_mode, 'get_all_players'):
-            # Multiplayer
             players = game_mode.get_all_players()
             score_text = " | ".join([f"{p.get_name()}: {p.get_score()}"
                                      for p in players])
         else:
-            # Single player
             score_text = f"{current_player.get_name()}: {current_player.get_score()} pts"
 
         ttk.Label(header_frame, text=score_text,
                   style='Subtitle.TLabel').pack(pady=25)
 
-        # Question frame
         question_frame = tk.Frame(self.root, bg='white')
         question_frame.pack(expand=True, fill='both', padx=30, pady=20)
 
-        # Info bar
         info_frame = tk.Frame(question_frame, bg='white')
         info_frame.pack(fill='x', pady=5)
 
@@ -323,7 +289,6 @@ class QuizGUI:
                   font=('Helvetica', 11, 'bold'),
                   foreground='#8E44AD').pack(side='left')
 
-        # Question
         question = self.controller.get_current_question()
         if not question:
             self._show_results()
@@ -332,7 +297,6 @@ class QuizGUI:
         ttk.Label(question_frame, text=question.get_text(),
                   style='Question.TLabel').pack(pady=20, anchor='w')
 
-        # Options
         options_frame = tk.Frame(question_frame, bg='white')
         options_frame.pack(fill='both', expand=True, pady=10)
 
