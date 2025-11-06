@@ -240,7 +240,7 @@ class QuizGUI:
                 num = num_players_var.get()
 
                 # Create dependencies
-                parameters = {'amount': 30, 'type': 'multiple', 'difficulty': 'easy'}
+                parameters = {'amount': 10, 'type': 'multiple', 'difficulty': 'easy'}
                 problem_bank = OpenTBProblemBank(parameters)
                 question_manager = QuestionManager(problem_bank)
 
