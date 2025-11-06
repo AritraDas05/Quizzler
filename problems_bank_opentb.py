@@ -5,10 +5,6 @@ import requests
 
 
 class OpenTBProblemBank(ProblemBank, IQuestionProvider):
-    """
-    Implements both ProblemBank and IQuestionProvider
-    (Interface Segregation Principle)
-    """
 
     def __init__(self, parameters: dict):
         self.__parameters = parameters
@@ -26,7 +22,6 @@ class OpenTBProblemBank(ProblemBank, IQuestionProvider):
         return self.__questions.copy()
 
     def get_questions(self) -> List[Any]:
-        """IQuestionProvider interface method"""
         return self.__questions.copy()
 
     def get_question(self, index: int) -> Any:

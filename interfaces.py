@@ -3,7 +3,6 @@ from typing import List, Any, Dict, Optional
 
 
 class IQuestionProvider(ABC):
-    """Interface for question providers (Interface Segregation Principle)"""
 
     @abstractmethod
     def load_questions(self) -> None:
@@ -19,7 +18,6 @@ class IQuestionProvider(ABC):
 
 
 class IDifficultyStrategy(ABC):
-    """Strategy pattern for difficulty adjustment (Open/Closed Principle)"""
 
     @abstractmethod
     def adjust_difficulty(self, player_stats: Dict[str, Any]) -> str:
@@ -31,7 +29,6 @@ class IDifficultyStrategy(ABC):
 
 
 class IScoringStrategy(ABC):
-    """Strategy pattern for scoring systems (Open/Closed Principle)"""
 
     @abstractmethod
     def calculate_score(self, is_correct: bool, time_taken: int, difficulty: str) -> int:
@@ -39,7 +36,6 @@ class IScoringStrategy(ABC):
 
 
 class IGameMode(ABC):
-    """Abstract base class for game modes (Polymorphism)"""
 
     @abstractmethod
     def initialize(self) -> None:
@@ -63,7 +59,6 @@ class IGameMode(ABC):
 
 
 class IPlayer(ABC):
-    """Abstract player interface"""
 
     @abstractmethod
     def get_name(self) -> str:
@@ -87,7 +82,6 @@ class IPlayer(ABC):
 
 
 class IView(ABC):
-    """Abstract view interface (Interface Segregation Principle)"""
 
     @abstractmethod
     def show(self) -> None:

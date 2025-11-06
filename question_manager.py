@@ -7,7 +7,6 @@ from problems_bank_abstract import ProblemBank
 
 
 class QuestionManager:
-    """Manages questions and their lifecycle (Single Responsibility)"""
 
     def __init__(self, question_provider: IQuestionProvider):
         self._provider = question_provider
@@ -15,13 +14,11 @@ class QuestionManager:
         self._current_index = 0
 
     def load_questions(self) -> None:
-        """Load and process questions from provider"""
         self._provider.load_questions()
         raw_questions = self._provider.get_questions()
 
         self._questions = []
         for raw_q in raw_questions:
-            # Decode HTML entities
             raw_q['question'] = html.unescape(raw_q.get('question', ''))
             raw_q['correct_answer'] = html.unescape(raw_q.get('correct_answer', ''))
             raw_q['incorrect_answers'] = [html.unescape(ans)
@@ -36,7 +33,6 @@ class QuestionManager:
         return None
 
     def get_shuffled_options(self) -> List[str]:
-        """Get shuffled answer options for current question"""
         question = self.get_current_question()
         if question:
             options = question.get_all_answers()
@@ -45,7 +41,6 @@ class QuestionManager:
         return []
 
     def next_question(self) -> bool:
-        """Move to next question"""
         self._current_index += 1
         return self._current_index < len(self._questions)
 
