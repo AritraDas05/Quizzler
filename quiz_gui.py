@@ -11,7 +11,6 @@ from interfaces import IView
 
 
 class BaseView(IView):
-    """Base view class (Template Method Pattern)"""
 
     def __init__(self, root: tk.Tk):
         self.root = root
@@ -32,7 +31,6 @@ class BaseView(IView):
 
 
 class QuizGUI:
-    """Main GUI - uses dependency injection (Dependency Inversion)"""
 
     def __init__(self, root: tk.Tk):
         self.root = root
@@ -361,13 +359,3 @@ class QuizGUI:
                   font=('Helvetica', 12), bg='#95A5A6', fg='white',
                   width=15, height=2,
                   command=self._show_main_menu).pack(side='left', padx=10)
-
-
-def main():
-    root = tk.Tk()
-    app = QuizGUI(root)
-    root.mainloop()
-
-
-if __name__ == "__main__":
-    main()

@@ -5,18 +5,13 @@ from models import Question
 
 
 class GameController:
-    """
-    Main game controller - depends on abstractions, not concretions
-    (Dependency Inversion Principle)
-    """
 
     def __init__(self, game_mode: IGameMode, question_manager: QuestionManager):
-        self._game_mode = game_mode  # Depends on IGameMode abstraction
+        self._game_mode = game_mode
         self._question_manager = question_manager
         self._time_taken = 0
 
     def start_game(self) -> None:
-        """Initialize and start the game"""
         self._game_mode.initialize()
         self._question_manager.load_questions()
 
@@ -27,10 +22,6 @@ class GameController:
         return self._question_manager.get_shuffled_options()
 
     def submit_answer(self, answer: str, time_taken: int) -> tuple:
-        """
-        Submit answer and get result
-        Returns: (is_correct, points_earned)
-        """
         question = self._question_manager.get_current_question()
         if not question:
             return False, 0
@@ -41,7 +32,6 @@ class GameController:
         return is_correct, points
 
     def next_question(self) -> bool:
-        """Move to next question/turn"""
         has_more = self._question_manager.next_question()
 
         if has_more and hasattr(self._game_mode, 'next_turn'):
